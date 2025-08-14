@@ -5,9 +5,6 @@ Utilities to compute **XPS-like spectra** on a **Wilson chain** using an eNRG-st
 - **Base (no impurity)** and **impurity** Hamiltonians
 - **Primary**, **box-convolved**, and **continuous** spectra
 - CLI “testbench” for quick runs
-
-> Continuous spectra use an **inside-like crossing method**: scan a grid in $w=\lambda^\theta#, detect crossings of $E(w)-\varepsilon$ on segments $[w_p,w_{p+1}]$, and deposit one rate per crossing.
-
 ---
 
 
