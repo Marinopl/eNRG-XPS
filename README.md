@@ -5,9 +5,6 @@ Utilities to compute **XPS-like spectra** on a **Wilson chain** using an eNRG-st
 - **Base (no impurity)** and **impurity** Hamiltonians
 - **Primary**, **box-convolved**, and **continuous** spectra
 - CLI “testbench” for quick runs
-
-> Continuous spectra use an **inside-like crossing method**: scan a grid in $w=\lambda^\theta#, detect crossings of $E(w)-\varepsilon$ on segments $[w_p,w_{p+1}]$, and deposit one rate per crossing.
-
 ---
 
 
@@ -22,6 +19,7 @@ Utilities to compute **XPS-like spectra** on a **Wilson chain** using an eNRG-st
 - **`hamiltonian_imp.py`** – **Impurity** Hamiltonian (local level `d` hybridized by `v`).
 - **`spectra_imp.py`** – Impurity spectra.
 - **`testbench_base.py`** / **`test_spectra_imp.py`** – Simple **CLI** helpers to compute arrays (NPZ) and optionally make a quick plot. They are **not** unit tests; they’re bench scripts for exploration.
+- **`xps_ic_original_ipynb`** - Original code made to obtain the title of Bachelor in Theoretical Physics at the University of São Paulo.
 
 ---
 
