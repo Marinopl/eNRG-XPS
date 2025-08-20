@@ -43,7 +43,7 @@ def xps_proj_imp(n: int, k: float, d: float, v: float, w: float,
 
     ener_excit = float(eval_f[head] - eval_f[hole])
     rate = det_abs_sq(M)
-    # (original xps_proj_imp did not return normalized energy; we keep that signature)
+    
     return ener_excit, rate
 
 
@@ -91,12 +91,12 @@ def spectrum_imp_continuous(
     head: int,
     w_grid: np.ndarray | None = None,
     eps_edges: np.ndarray | None = None,
-    use_jacobian: bool = True,     # mantido por compatibilidade; NÃO usado aqui
+    use_jacobian: bool = True,
     *,
-    pick: str = "left",            # "left" (original) ou "interp" (interpolado em w)
+    pick: str = "left",
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    Inside-like continuous spectrum for the impurity case.
+    Continuous spectrum for the impurity case.
 
     Logic:
       - choose a w-grid (default: int_w(), θ∈[-1,1])
@@ -115,17 +115,15 @@ def spectrum_imp_continuous(
     """
     # 1) grids
     if w_grid is None:
-        w_grid = int_w()                 # θ ∈ [-1, 1], suave como no original
+        w_grid = int_w()
     if eps_edges is None:
-        eps_vals = int_epsilon()[1]      # aqui tratamos como "valores de ε", não "edges"
+        eps_vals = int_epsilon()[1]
     else:
-        # se o chamador passar "edges", use os próprios valores; manter compatibilidade
         eps_vals = np.asarray(eps_edges, dtype=float)
 
-    # A(ε) acumulado na mesma ordem de eps_vals (crescente ou decrescente)
     A_eps = np.zeros_like(eps_vals, dtype=float)
 
-    # 2) varrer n
+    # 2) sweep n
     for n in range(ni, nf, 2):
         nfermi = (n + 1) // 2
         hole = nfermi - head
@@ -133,41 +131,38 @@ def spectrum_imp_continuous(
         if hole < 0 or excit >= (n + 1):
             continue
 
-        # 3) E(w) e R(w) ao longo da malha de w
+        # 3) E(w) and R(w) along the w-grid
         M = len(w_grid)
         E = np.empty(M, dtype=float)
         R = np.empty(M, dtype=float)
         for p, w in enumerate(w_grid):
             eval_i, evec_i, _ = dig_ham_imp(n, 0.0, d, v, w)
             eval_f, evec_f, _ = dig_ham_imp(n, k,   d, v, w)
-            # overlap com autovetores em COLUNAS (NumPy)
+            # Overlap matrix ⟨final|initial⟩ with hole-row replaced by head-row
             M_ov = overlap_matrix(evec_f, evec_i, nfermi, hole, excit)
             R[p] = det_abs_sq(M_ov)
             E[p] = float(eval_f[excit] - eval_f[hole])
 
-        # 4) cruzamentos por segmento
+        # 4) detect crossings with ε
         E0, E1 = E[:-1], E[1:]
         R0, R1 = R[:-1], R[1:]
-        # broadcasting contra todos os eps
+    
         S0 = E0[:, None] - eps_vals[None, :]
         S1 = E1[:, None] - eps_vals[None, :]
-        # considere igualdade como cruzamento para não perder hits em pontos de grade
+        
         cross = ((S0 <= 0.0) & (S1 >= 0.0)) | ((S0 >= 0.0) & (S1 <= 0.0))
 
         if not cross.any():
             continue
 
-        # índices (segmento p, epsilon idx)
         seg_idx, eps_idx = np.nonzero(cross)
 
         if pick == "left":
-            # deposita R no endpoint esquerdo
             A_eps[eps_idx] += R0[seg_idx]
 
         elif pick == "interp":
-            # interpola em w: t = (ε - E0)/(E1 - E0), R* = (1-t)R0 + tR1
             denom = (E1[seg_idx] - E0[seg_idx])
-            # evite divisão por zero
+            
             t = (eps_vals[eps_idx] - E0[seg_idx]) / (denom + 1e-30)
             t = np.clip(t, 0.0, 1.0)
             R_star = (1.0 - t) * R0[seg_idx] + t * R1[seg_idx]

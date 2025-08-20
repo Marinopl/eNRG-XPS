@@ -156,12 +156,12 @@ def spectrum_continuous(
     head: int,
     w_grid: np.ndarray | None = None,
     eps_edges: np.ndarray | None = None,
-    use_jacobian: bool = True,  # mantido por compatibilidade; NÃO usado aqui
+    use_jacobian: bool = True,
     *,
-    pick: str = "left",         # "left" (igual ao inside original) ou "interp" (interpolado em w)
+    pick: str = "left",
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    Inside-like continuous spectrum for the base (no-impurity) model.
+    Continuous spectrum for the base (no-impurity) model.
 
     Logic
     -----
@@ -184,9 +184,9 @@ def spectrum_continuous(
     """
     # 1) grids
     if w_grid is None:
-        w_grid = int_w()            # suave e amplo: θ ∈ [-1, 1]
+        w_grid = int_w()
     if eps_edges is None:
-        eps_vals = int_epsilon()[1] # no seu código original é a malha “longa” de ε
+        eps_vals = int_epsilon()[1]
     else:
         eps_vals = np.asarray(eps_edges, dtype=float)
 
@@ -228,7 +228,7 @@ def spectrum_continuous(
         seg_idx, eps_idx = np.nonzero(cross)
 
         if pick == "left":
-            # deposit left-endpoint rate (matches inside-like behavior)
+            # deposit left-endpoint rate)
             A_eps[eps_idx] += R0[seg_idx]
 
         elif pick == "interp":

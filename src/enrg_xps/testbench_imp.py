@@ -27,7 +27,7 @@ def compute_impurity_spectra(
     # 1) Primary (no convolution variant here for impurity)
     erg_primary, rate_primary = spectrum_imp(ni, nf, k, d, v, w, head)
 
-    # 2) Continuous (iso-energy crossings)
+    # 2) Continuous
     eps_centers, A_eps = spectrum_imp_continuous(ni, nf, k, d, v, head, w_grid=None)
 
     return {
@@ -51,7 +51,7 @@ def main(argv: list[str] | None = None) -> None:
                    help="Disable 1/|dE/dw| weighting in the continuous spectrum.")
     p.add_argument("-o", "--output", type=str, default=None,
                    help="Path to .npz to save arrays (e.g., out/imp_spectra.npz).")
-    # optional plots (your style)
+    # optional plots
     p.add_argument("--plot-primary", action="store_true",
                    help="Plot (erg_primary, rate_primary).")
     p.add_argument("--plot-continuous", action="store_true",
@@ -72,14 +72,13 @@ def main(argv: list[str] | None = None) -> None:
         for kname, arr in data.items():
             print(f"{kname:>15} | shape={arr.shape} | min={arr.min():.4e} | max={arr.max():.4e} | sum={arr.sum():.4e}")
 
-    # ---------- optional plotting (minimal, you control the style) ----------
-    # Dica: para log-log, garanta x>0 e y>0; abaixo eu normalizo por energia (y/x).
+    # ---------- optional plotting ----------
     if args.plot_primary:
         import matplotlib.pyplot as plt
         x = data["erg_primary"]
         y_raw = data["rate_primary"]
         m = x > 0
-        x = x[m]; y = y_raw[m] / x    # troque para y_raw[m] se não quiser dividir por E
+        x = x[m]; y = y_raw[m] / x 
         plt.figure()
         plt.plot(x, y, "o")
         plt.xscale("log"); plt.yscale("log")

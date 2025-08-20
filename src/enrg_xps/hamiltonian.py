@@ -77,7 +77,7 @@ def dig_ham(n: int, k: float, w: float):
         eval_, evec_T = eigh_cached(key, ham__)
         evec_ = evec_T.T
         eval_norm = eval_ / normaliz(n, w)
-        return eval_, evec_, eval_norm, ham__
+        return eval_, evec_, eval_norm
 
 
 def delta(n: int, k: float, w: float) -> float:

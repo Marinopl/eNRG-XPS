@@ -67,15 +67,14 @@ def main(argv: list[str] | None = None) -> None:
         for kname, arr in data.items():
             print(f"{kname:>15} | shape={arr.shape} | min={arr.min():.4e} | max={arr.max():.4e} | sum={arr.sum():.4e}")
 
-    # -------- optional plots (your style) --------
-    # Dica: log-log precisa de x > 0 e y > 0
+    # -------- optional plots --------
     if args.plot_primary:
         import matplotlib.pyplot as plt
         x = data["erg_primary"]
         y_raw = data["rate_primary"]
         mask = x > 0
         x = x[mask]
-        y = (y_raw[mask] / x)  # use y_raw[mask] se não quiser normalizar por energia
+        y = (y_raw[mask] / x)
         plt.figure()
         plt.plot(x, y, marker="o", linestyle="-")
         plt.xscale("log"); plt.yscale("log")
@@ -92,7 +91,7 @@ def main(argv: list[str] | None = None) -> None:
         if x.size:
             mask = x > 0
             x = x[mask]
-            y = (y_raw[mask] / x)  # ou y_raw[mask]
+            y = (y_raw[mask] / x)
             plt.figure()
             plt.plot(x, y, marker="o", linestyle="-")
             plt.xscale("log"); plt.yscale("log")
@@ -110,7 +109,7 @@ def main(argv: list[str] | None = None) -> None:
         y_raw = data["A_eps"]
         mask = x > 0
         x = x[mask]
-        y = (y_raw[mask] / x)  # ou y_raw[mask]
+        y = (y_raw[mask] / x)
         plt.figure()
         plt.plot(x, y, marker="o", linestyle="-")
         plt.xscale("log"); plt.yscale("log")

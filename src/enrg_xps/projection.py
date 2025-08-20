@@ -1,5 +1,3 @@
-# core/projection.py
-
 import numpy as np
 
 def overlap_matrix(evec_final: np.ndarray,
@@ -11,7 +9,6 @@ def overlap_matrix(evec_final: np.ndarray,
     F = evec_final[:, :nfermi]           # (dim, nfermi)
     I = evec_init[:,  :nfermi]           # (dim, nfermi)
 
-    # Base overlap: <final|init> = Fᴴ I
     M = F.conj().T @ I                   # (nfermi, nfermi)
 
     # Replace hole row with head projection row
