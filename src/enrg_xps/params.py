@@ -11,4 +11,4 @@ T: float = 1.0
 lam: float = 2.0
 
 # Chain offset
-zeta: int = 5
+zeta: int = 0
