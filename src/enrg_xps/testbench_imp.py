@@ -1,4 +1,3 @@
-# src/enrg_xps/test_spectra_imp.py
 from __future__ import annotations
 import argparse
 import numpy as np

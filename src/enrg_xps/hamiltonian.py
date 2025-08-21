@@ -1,5 +1,3 @@
-# core/hamiltonian.py
-
 """
 Hamiltonian construction and diagonalization for the XPS-eNRG model.
 
